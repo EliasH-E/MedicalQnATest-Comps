@@ -1,17 +1,17 @@
 """
 By: Daya Tucker
 
-Takes a list of tokens (biomedical words) that scispacy has pulled from the original text
-and standardized possibly. Replaces all of these with the simplest version.
+Takes a word or phrase that scispacy has pulled from the original text
+and standardized possibly. Replaces it with the simplest version from chv
 
-Should match by longest term first. Pulls all CHV preferred terms for the concept and 
+Pulls all terms for the concept ID and 
 picks the best replacement via:
     highest combo score -> highest frequency score -> highest context score
 """
 
 import pandas as pd
 import spacy
-from spacy.matcher import PhraseMatcher
+#from spacy.matcher import PhraseMatcher
 
 def load_chv():
     chv = pd.read_csv(
