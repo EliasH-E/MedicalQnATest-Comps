@@ -15,7 +15,7 @@ import wordfreq
 #nltk.download('averaged_perceptron_tagger_eng')
 #nltk.download('wordnet')
 #nltk.download('omw-1.4')
-
+stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 
 def to_wordnet_pos(tag):
@@ -37,38 +37,38 @@ def avg_zipf(name):
     return total_freq / len(parts)
 
 
-sentence = "The diminutive feline procured a morsel of loaves. The beguiled fellow of a corrupted disposition devises a plan of misfortune and misery"
-#sentence = "Adult acute myeloid leukemia (AML) is a type of cancer in which the bone marrow makes abnormal myeloblasts (a type of white blood cell), red blood cells, or platelets."
-#sentence = "Henry went to the store"
-print(sentence)
-for i in range(1):
-    tokens = nltk.word_tokenize(sentence)
-    tagged = nltk.pos_tag(tokens)
 
-    new_words = []
-    for word, tag in tagged:
-        wn_pos = to_wordnet_pos(tag)
+def simplify_total_sentence(sentence, imporant_words):
+    #print(sentence)
+    for i in range(1):
+        tokens = nltk.word_tokenize(sentence)
+        tagged = nltk.pos_tag(tokens)
 
-        # leave punctuation, stopwords, etc. alone
-        if wn_pos is None or not word.isalpha():
-            new_words.append(word)
-            continue
+        new_words = []
+        for word, tag in tagged:
+            wn_pos = to_wordnet_pos(tag)
 
-        lemma = lemmatizer.lemmatize(word.lower(), pos=wn_pos)
+            # leave punctuation, stopwords, etc. alone
+            if wn_pos is None or not word.isalpha() or word in imporant_words or word in stop_words:
+                new_words.append(word)
+                continue
 
-        my_syns = {lemma: avg_zipf(lemma)}
-        for syn in wordnet.synsets(lemma, pos=wn_pos):
-            for related in [syn] + syn.hyponyms() + syn.hypernyms():
-                for lem in related.lemmas():
-                    my_syns[lem.name()] = avg_zipf(lem.name())
+            lemma = lemmatizer.lemmatize(word.lower(), pos=wn_pos)
 
-        best_word = max(my_syns, key=my_syns.get)
-        new_words.extend(best_word.split("_"))
+            my_syns = {lemma: avg_zipf(lemma)}
+            for syn in wordnet.synsets(lemma, pos=wn_pos):
+                for related in [syn] + syn.hyponyms() + syn.hypernyms():
+                    for lem in related.lemmas():
+                        my_syns[lem.name()] = avg_zipf(lem.name())
 
-    new_sentece = ""
-    for i in range(len(new_words)):
-        if(i != 0 and new_words[i][0].isalpha()):
-            new_sentece += " "
-        new_sentece += new_words[i]
-    print(new_sentece)
-    sentence = new_sentece
+            best_word = max(my_syns, key=my_syns.get)
+            new_words.extend(best_word.split("_"))
+
+        new_sentece = ""
+        for i in range(len(new_words)):
+            if(i != 0 and new_words[i][0].isalpha()):
+                new_sentece += " "
+            new_sentece += new_words[i]
+        
+        sentence = new_sentece
+        return new_sentece
