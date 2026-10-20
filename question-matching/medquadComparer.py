@@ -4,7 +4,7 @@ import numpy as np
 def get_closest_answer(user_question):
 
     model = SentenceTransformer('FremyCompany/BioLORD-2023')
-    read_file = open("encodings-standardized.txt", "r")
+    read_file = open("encodings-standardized-1.txt", "r")
     print("User Question: " + user_question + "\n")
     userQ_embedding = model.encode(user_question)
 
