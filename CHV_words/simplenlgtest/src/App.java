@@ -37,10 +37,19 @@ public class App {
         String output = realiser.realise(par1).getRealisation();
         System.out.println(output);
         */
-        SPhraseSpec p = nlgFactory.createClause("patient", "present", "with severe chest pain");
+        //SPhraseSpec p = nlgFactory.createClause("patient", "present", "with severe chest pain");
 
-        String output = realiser.realiseSentence(p);
+        SPhraseSpec p2 = nlgFactory.createClause("Adult acute myeloid leukemia", "be", "a type of cancer");
+        SPhraseSpec p3 = nlgFactory.createClause("the bone marrow", "makes", "abnormal myeloblasts");
+
+        DocumentElement s1 = nlgFactory.createSentence(p2);
+        DocumentElement s2 = nlgFactory.createSentence(p3);
+        
+        DocumentElement par1 = nlgFactory.createParagraph(Arrays.asList(s1, s2));
+
+        String output = realiser.realise(par1).getRealisation();
         System.out.println(output);
+        
 
     }
 }
