@@ -1,5 +1,6 @@
 import spacy
 import SentenceSimplify
+import NewAndImprovesSentence
 nlp = spacy.load("en_core_web_sm")
 
 
@@ -40,10 +41,11 @@ def only_whats_needed(text, imporant_words):
 
 # Test it out
 if __name__ == "__main__":
-  text = "The exceptionally quick brown feline quickly lept over the very lazy canine in the citadel."
-  importantWords = set(["lazy","citadel"])
+  #text = "The exceptionally quick brown feline quickly lept over the very lazy canine in the citadel."
+  text = "The dauntless gross wyvern lays seige to the coveted citadel"
+  importantWords = set(["lazy"])
   print(f"Original: {text}")
 
   first_result = only_whats_needed(text,importantWords)
   print(f"Simplified: {first_result}")
-  print(f"Simplified: {SentenceSimplify.simplify_total_sentence(first_result,importantWords)}")
+  print(f"Simplified: {NewAndImprovesSentence.simplify_total_sentence(first_result,importantWords)}")
