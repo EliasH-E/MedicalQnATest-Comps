@@ -1,11 +1,17 @@
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
-def get_closest_answer(user_question):
+model = SentenceTransformer('FremyCompany/BioLORD-2023')
 
-    model = SentenceTransformer('FremyCompany/BioLORD-2023')
+def get_closest_question(user_question):
+    return get_closest_q_a(user_question)["question"]
+
+def get_closest_answer(user_question):
+    return get_closest_q_a(user_question)["answer"]
+
+def get_closest_q_a(user_question):
     read_file = open("encodings-standardized-1.txt", "r")
-    print("User Question: " + user_question + "\n")
+    # print("User Question: " + user_question + "\n")
     userQ_embedding = model.encode(user_question)
 
     max_similarity = 0
@@ -37,8 +43,9 @@ def get_closest_answer(user_question):
         a = line[1]
         if q == max_question:
             chosen_answer = a
-            print(q)
-            print(a)
+            chosen_question = q
+            # print(q)
+            # print(a)
             break
-    return chosen_answer
+    return {"question": chosen_question, "answer": chosen_answer}
     
