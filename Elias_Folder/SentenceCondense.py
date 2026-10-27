@@ -39,6 +39,15 @@ def only_whats_needed(text, imporant_words):
   return result.strip().capitalize()
 
 
+def simplify(text, importantWords):
+  print(f"Original: {text}")
+
+  first_result = only_whats_needed(text,importantWords)
+  print(f"Simplified: {first_result}")
+  final_result = NewAndImprovesSentence.simplify_total_sentence(first_result,importantWords)
+  print(f"Simplified: {final_result}")
+  return final_result
+
 # Test it out
 if __name__ == "__main__":
   text = "The exceptionally quick very lazy brown feline quickly lept over the canine in the citadel."
@@ -46,8 +55,5 @@ if __name__ == "__main__":
   #text = "The happy man zorts merrily"
   #text = "I like to eat cheese"
   importantWords = set(["lazy"])
-  print(f"Original: {text}")
-
-  first_result = only_whats_needed(text,importantWords)
-  print(f"Simplified: {first_result}")
-  print(f"Simplified: {NewAndImprovesSentence.simplify_total_sentence(first_result,importantWords)}")
+  
+  simplify(text, importantWords)
