@@ -41,8 +41,10 @@ def only_whats_needed(text, imporant_words):
 
 # Test it out
 if __name__ == "__main__":
-  #text = "The exceptionally quick brown feline quickly lept over the very lazy canine in the citadel."
-  text = "The dauntless gross wyvern lays seige to the coveted citadel"
+  text = "The exceptionally quick very lazy brown feline quickly lept over the canine in the citadel."
+  #text = "The dauntless wyvern walks towards the tall instructor"
+  #text = "The happy man zorts merrily"
+  #text = "I like to eat cheese"
   importantWords = set(["lazy"])
   print(f"Original: {text}")
 

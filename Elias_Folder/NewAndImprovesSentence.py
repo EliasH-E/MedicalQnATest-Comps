@@ -5,6 +5,7 @@ from nltk.wsd import lesk
 from nltk.corpus import stopwords
 import wordfreq
 import lemminflect
+from lemminflect import getInflection
 import spacy
 
 from sentence_transformers import SentenceTransformer
@@ -17,7 +18,7 @@ lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))
 
 INCLUDE_HYPONYMS = True  
-MAX_SENSE_RANK = 14      # candidate must use this sense as one of ITS top N senses
+MAX_SENSE_RANK = 15      # candidate must use this sense as one of ITS top N senses
 
 
 
@@ -66,9 +67,33 @@ def pick_sense(tokens, lemma, wn_pos):
     senses = wordnet.synsets(lemma, pos=wn_pos)
     return senses
 
+def inflect_word(name, tag):
+    """
+    name: name of word
+    tag:  original tag (NNS, VBD, VBG, JJR, ...)
+    """
+    parts = name.split("_")
+    # Verbs inflect on the first word (give up -> gave up)
+    # others on the last (ice cream -> ice creams)
+    i = len(parts) - 1 
+    if tag.startswith("V"):
+        i = 0 
+
+    forms = getInflection(parts[i], tag=tag) 
+    if forms:
+        parts[i] = forms[0]
+    return parts
+
+
+def match_case(original, words):
+    words = words.copy()
+    if len(original) > 1 and original.isupper():
+        return [w.upper() for w in words]
+    if original[0].isupper():
+        words[0] = words[0].capitalize()
+    return words
 
 def candidate_words(sense, wn_pos):
-
 
     found = {}
    # print(sense)
@@ -83,9 +108,8 @@ def candidate_words(sense, wn_pos):
                # print(name)
                 if name != name.lower():
                     continue  # skip proper names
-                #top_senses = wordnet.synsets(name, pos=wn_pos)[:MAX_SENSE_RANK]
-                #if syn not in top_senses:
-                #    continue
+               
+              
                 found[name] = avg_zipf(name)
                 #print(name, found[name])
     return found
@@ -109,13 +133,17 @@ def simplify_total_sentence(sentence, imporant_words):
         if wn_pos is None or not word.isalpha() or word in stop_words or word in imporant_words:
             new_words.append(word)
             continue
-
+        
+        if(avg_zipf(word) > 4.5):
+            new_words.append(word)
+            continue
         lemma = lemmatizer.lemmatize(word.lower(), pos=wn_pos)
         wn_pos = fix_pos(lemma, wn_pos)
 
         sense = pick_sense(tokens, lemma, wn_pos)
         if sense is None:
             new_words.append(word)
+            id += 1
             continue
 
         my_syns = {lemma: avg_zipf(lemma)}
@@ -123,31 +151,33 @@ def simplify_total_sentence(sentence, imporant_words):
 
 
         sorted_syns = dict(sorted(my_syns.items(), key=lambda item: item[1], reverse=True))
-        #best_word = None
         
+        word_to_proper_case = {}
         orig_embed = model.encode(" ".join(current_sentence))
         for i in sorted_syns:
+            if(my_syns[i]==0):
+               word_to_proper_case[i]=[i]
+               continue
             current_copy = current_sentence.copy()
-            current_copy[id] = " ".join(i.split("_"))
+            word_to_proper_case[i] = match_case(word, inflect_word(i, tag)) 
+            current_copy[id] = " ".join(word_to_proper_case[i])               
             comp_score = compare(orig_embed," ".join(current_copy), model)
-            #print(i, comp_score)
-            #if(comp_score >= 0.9):
-               # best_word = i
-               # break
+           
             my_syns[i] = my_syns[i]*comp_score*comp_score*comp_score*comp_score*comp_score*comp_score*comp_score*comp_score
-        #print(my_syns)
+       
+       
         best_word = max(my_syns, key=my_syns.get)
-        new_words.extend(best_word.split("_"))
-        current_sentence[id] = " ".join(best_word.split("_"))
+        new_words.extend(word_to_proper_case[best_word])                 
+        
         id += 1
 
-    new_sentece = ""
+    new_sentence = ""
     for j in range(len(new_words)):
         if j != 0 and new_words[j][0].isalpha():
-            new_sentece += " "
-        new_sentece += new_words[j]
-    #print(new_sentece)
-    sentence = new_sentece
-    return new_sentece
+            new_sentence += " "
+        new_sentence += new_words[j]
 
-#print("Final:",simplify_total_sentence(sentence, set([])))
+    sentence = new_sentence
+    return new_sentence
+
+#print("Final:",simplify_total_sentence("the man declares his desires", set([])))
