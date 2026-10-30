@@ -47,5 +47,5 @@ def get_closest_q_a(user_question):
             # print(q)
             # print(a)
             break
-    return {"question": chosen_question, "answer": chosen_answer}
+    return {"question": chosen_question, "answer": chosen_answer, "similarity": max_similarity}
     

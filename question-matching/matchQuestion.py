@@ -1,5 +1,6 @@
 from SentenceStandardize import standardize
 from medquadComparer import get_closest_answer
+from medquadComparer import get_closest_q_a
 
 user_question = "how much vitamin b3 should i take?"
 
