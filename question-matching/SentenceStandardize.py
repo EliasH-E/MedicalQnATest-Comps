@@ -10,7 +10,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.stem import PorterStemmer
 import pandas as pd 
 #reads as tsv with no column names
-chv = pd.read_csv("CHV_words/CHV_concepts_terms_flatfile_20110204.tsv", sep="\t", header=None, low_memory=False)
+chv = pd.read_csv("CHV_concepts_terms_flatfile_20110204.tsv", sep="\t", header=None, low_memory=False)
 chv = chv.rename(columns={0: "CUI", 1: "term", 2: "clinicalTerm", 3: "CHVTerm"})
 #for testing. can replace with user input
 # sentence = "Do I have a heart attack or high blood pressure"
