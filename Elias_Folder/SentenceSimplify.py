@@ -47,6 +47,36 @@ def compare(embeds, sent2, model):
     embeddings = model.encode(sentences)
     return model.similarity(embeds, embeddings[0])
 
+def remove_double_negative(sentence):
+    pairs = {"not abnormal": "normal",
+    "not uncommon": "common",
+    "not incorrect": "correct",
+    "not impossible": "possible",
+    "not inactive": "active",
+    "not inadequate": "adequate",
+    "not ineffective": "effective",
+    "not insufficient": "sufficient",
+    "not invalid": "valid",
+    "not irrelevant": "relevant",
+    "not unusual": "usual",
+    "not unstable": "stable",
+    "not unsafe": "safe",
+    "n't abnormal": " normal",
+    "n't uncommon": " common",
+    "n't incorrect": " correct",
+    "n't impossible": " possible",
+    "n't inactive": " active",
+    "n't inadequate": " adequate",
+    "n't ineffective": " effective",
+    "n't insufficient": " sufficient",
+    "n't invalid": " valid",
+    "n't irrelevant": " relevant",
+    "n't unusual": " usual",
+    "n't unstable": " stable",
+    "n't unsafe": " safe",}
+    for negative, simplified in pairs.items():
+        sentence.replace(negative, simplified)
+
 def simplify_total_sentence(sentence, imporant_words):
     #print(sentence)
    
