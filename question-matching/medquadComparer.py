@@ -34,7 +34,23 @@ def get_closest_q_a(user_question):
                 # print(max_similarity)
                 # print(max_question)
                 # print()
+    read_file = open ("encodings-standardized-2.txt", "r")
 
+    counter = 0
+    for line in read_file:
+        if counter == 0:
+            counter += 1
+        else:
+            embedding_line = line.split(",")[1][1:-2]
+            embedding_line = ','.join(embedding_line.split())
+            # print(line.split(",")[0])
+            restored_embedding = np.fromstring(embedding_line, sep=",")
+            similarities = model.similarity(userQ_embedding.astype(np.float64), restored_embedding.astype(np.float64))
+            # print(similarities[0][0].item())
+            if similarities[0][0].item() > max_similarity:
+                max_similarity = similarities[0][0].item()
+                max_question = line.split(",")[0]
+    print(max_similarity) #check the max similarity
     chosen_answer = "ERROR"
     read_file = open("medquad-standardized.txt", "r")
     for line in read_file:
