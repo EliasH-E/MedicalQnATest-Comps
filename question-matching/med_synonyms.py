@@ -16,7 +16,7 @@ import spacy
 def load_chv():
     chv = pd.read_csv(
         "CHV_concepts_terms_flatfile_20110204.tsv",
-        sep="\t"
+        sep="\t",low_memory=False
     )
 
     return chv
@@ -24,6 +24,7 @@ def load_chv():
 chv = load_chv()
 
 def simplify_term(term, chv):
+    chv = load_chv()
     matches = chv[chv.iloc[:, 1].str.lower() == term.lower()]
 
     if matches.empty:

@@ -1,4 +1,5 @@
 from SentenceStandardize import standardize
+from medquadComparer import get_closest_q_a
 from medquadComparer import get_closest_answer, get_closest_question
 
 user_question = "my eyes are dry. help"
