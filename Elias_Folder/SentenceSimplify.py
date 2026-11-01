@@ -76,6 +76,7 @@ def remove_double_negative(sentence):
     "n't unsafe": " safe",}
     for negative, simplified in pairs.items():
         sentence.replace(negative, simplified)
+    return sentence
 
 def simplify_total_sentence(sentence, imporant_words):
     #print(sentence)
