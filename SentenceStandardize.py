@@ -44,3 +44,34 @@ while i < len(tokens):
 sentence = " ".join(newTok)
 
 print(sentence)
+
+def sentenceStandardizer(in_string, csv):
+    chv = pd.read_csv(csv, sep="\t", header=None)
+    chv = chv.rename(columns={0: "CUI", 1: "term", 2: "clinicalTerm", 3: "CHVTerm"})
+    tokens = word_tokenize(in_string.lower())
+    newTok = []
+
+    i = 0
+    while i < len(tokens):
+        matched = False
+
+        for length in range(4, 0, -1):
+            if i + length <= len(tokens):
+                term = " ".join(tokens[i:i + length])
+
+                match = chv["term"].str.lower() == term
+                matches = chv[match]
+                if not matches.empty:
+                    clinical = matches.iloc[0]["clinicalTerm"]
+
+                    newTok.append(clinical)
+
+                    i += length
+                    matched = True
+                    break
+
+        if not matched:
+            newTok.append(tokens[i])
+            i += 1
+    #will be in lowercase. lowercase dataset?
+    return " ".join(newTok)
