@@ -1,40 +1,39 @@
-#instead of probabilities these should all say "similarities". oops!
-correct_probabilities = open("correct-probabilities.txt", "r")
-wrong_probabilities = open("wrong-probabilities.txt", "r")
 
-total_correct_lines = 0
-correct_probabilities_sum = 0
-total_wrong_lines = 0
-wrong_probabilities_sum = 0
 
-for line in correct_probabilities:
-    total_correct_lines += 1
-    correct_probabilities_sum += float(line)
 
-for line in wrong_probabilities:
-    total_wrong_lines += 1
-    wrong_probabilities_sum += float(line)
+def findSimilarityData(correct_similarities_file, incorrect_similarities_file):
+    """ Usage:
+            similarity_data = findAverages("correct-similarities.txt", "incorrect-similarities.txt")
+    """
+    correct_similarities = open(correct_similarities_file, "r")
+    incorrect_similarities = open(incorrect_similarities_file, "r")
 
-correct_average = correct_probabilities_sum/total_correct_lines
-wrong_average = wrong_probabilities_sum/total_wrong_lines
-print (correct_average)
-print (wrong_average)
+    total_correct_lines = 0
+    correct_similarities_sum = 0
+    for line in correct_similarities:
+        total_correct_lines += 1
+        correct_similarities_sum += float(line)
 
-correct_probabilities = open("correct-probabilities.txt", "r")
-wrong_probabilities = open("wrong-probabilities.txt", "r")
+    total_incorrect_lines = 0
+    incorrect_similarities_sum = 0
+    for line in incorrect_similarities:
+        total_incorrect_lines += 1
+        incorrect_similarities_sum += float(line)
 
-correct_square_sum = 0
-wrong_square_sum = 0
+    correct_similarities = open(correct_similarities_file, "r")
+    incorrect_similarities = open(incorrect_similarities_file, "r")
 
-for line in correct_probabilities:
-    correct_square_sum += (float(line)-correct_average)**2
-    
+    correct_average = correct_similarities_sum/total_correct_lines
+    correct_square_sum = 0
+    for line in correct_similarities:
+        correct_square_sum += (float(line)-correct_average)**2
 
-for line in wrong_probabilities:
-    wrong_square_sum += (float(line)-wrong_average)**2
+    incorrect_average = incorrect_similarities_sum/total_incorrect_lines
+    incorrect_square_sum = 0
+    for line in incorrect_similarities:
+        incorrect_square_sum += (float(line)-incorrect_average)**2
 
-correct_stdev = (correct_square_sum/(total_correct_lines-1)) ** .5
-wrong_stdev = (wrong_square_sum/(total_wrong_lines-1)) ** .5
+    correct_stddev = (correct_square_sum/(total_correct_lines-1)) ** .5
+    incorrect_stddev = (incorrect_square_sum/(total_incorrect_lines-1)) ** .5
 
-print(correct_stdev)
-print(wrong_stdev)
+    return {"correct_average": correct_average, "incorrect_average": incorrect_average, "correct_stddev": correct_stddev, "incorrect_stddev": incorrect_stddev}
