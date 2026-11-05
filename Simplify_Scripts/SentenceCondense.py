@@ -47,22 +47,13 @@ def simplify(text, importantWords):
 
   first_result = only_whats_needed(text,importantWords)
   print(f"Simplified: {first_result}")
-  final_result = SentenceSynonymReplacer.simplify_total_sentence(first_result,importantWords)
+  second_result = SentenceSynonymReplacer.remove_double_negative(first_result)
+  print(f"Doouble Negative Remover: {second_result}")
+  final_result = SentenceSynonymReplacer.simplify_total_sentence(second_result,importantWords)
   print(f"Simplified: {final_result}")
   return final_result
 
-# Test it out
-if __name__ == "__main__":
-  text = "The exceptionally quick very lazy brown feline quickly lept over the canine in the citadel."
-  #text = "The dauntless wyvern walks towards the tall instructor"
-  #text = "The happy man zorts merrily"
-  #text = "I like to eat cheese"
-  text = "The patient has muscular atrophy"
-  #text = "After Kaposi sarcoma has been diagnosed, tests are done to find out if cancer cells have spread to other parts of the body. The following tests and procedures may be used to find out if cancer has spread to other parts of the body:"
-  #text = "What causes abetalipoproteinemia? Abetalipoproteinemia is caused by changes (mutations) in the MTTP gene. The MTTP gene gives the body instructions to make a protein needed for creating beta-lipoproteins. These lipoproteins are necessary for the body to absorb fats, cholesterol, and fat-soluble vitamins (vitamins A, D, E and K), and for transporting these substances in the blood. Mutations in the MTTP result in a lack of beta-lipoproteins, leading to an inability to absorb and transport these substances. This in turn leads to the nutritional and neurologic problems in affected people."
-  #text = "this in turn leads to the nutritional and neurologic problems in affected people."
-  
-  
+def setup_and_med_simplify(text):
   print(f"Original: {text}")
   importantWords = set(["lazy"])
   med_result = med_synonyms.med_simple(text)
@@ -72,4 +63,16 @@ if __name__ == "__main__":
   importantWords = med_result[1]
   print("Important Words:", importantWords)
   print()
-  simplify(text, importantWords)
+  return simplify(text, importantWords)
+
+if __name__ == "__main__":
+  text = "The exceptionally quick very lazy brown feline quickly lept over the canine in the citadel."
+  #text = "The dauntless wyvern walks towards the tall instructor"
+  #text = "The happy man zorts merrily"
+  #text = "I like to eat cheese"
+  text = "The patient has not abnormal muscular atrophy"
+  #text = "After Kaposi sarcoma has been diagnosed, tests are done to find out if cancer cells have spread to other parts of the body. The following tests and procedures may be used to find out if cancer has spread to other parts of the body:"
+  #text = "What causes abetalipoproteinemia? Abetalipoproteinemia is caused by changes (mutations) in the MTTP gene. The MTTP gene gives the body instructions to make a protein needed for creating beta-lipoproteins. These lipoproteins are necessary for the body to absorb fats, cholesterol, and fat-soluble vitamins (vitamins A, D, E and K), and for transporting these substances in the blood. Mutations in the MTTP result in a lack of beta-lipoproteins, leading to an inability to absorb and transport these substances. This in turn leads to the nutritional and neurologic problems in affected people."
+  #text = "this in turn leads to the nutritional and neurologic problems in affected people."
+  setup_and_med_simplify(text)
+  
