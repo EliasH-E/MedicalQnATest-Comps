@@ -20,7 +20,11 @@ stop_words = set(stopwords.words('english'))
 INCLUDE_HYPONYMS = True  
 MAX_SENSE_RANK = 15      # candidate must use this sense as one of ITS top N senses
 
-
+'''
+Input: sentence(str), the inputted sentence string
+Output: sentence(str), the inputted sentence with all double negatives removed
+Purpose: To remove all double negatives from a sentence to improve readability
+'''
 def remove_double_negative(sentence):
     pairs = {"not abnormal": "normal",
     "not uncommon": "common",
@@ -52,6 +56,12 @@ def remove_double_negative(sentence):
         sentence=sentence.replace(negative, simplified)
     return sentence
 
+'''
+Input: embeds(Word Embeddings), the word embedings of the original sentence, 
+sent2(string) the new sentence, model (Hugging Face Model), the model that created embeddings
+Output: (float), similarity score between the two sentences 
+Purpose: To caclulate how similar two sentences are
+'''
 def compare(embeds, sent2, model):
     
     sentences = [sent2]
@@ -59,6 +69,11 @@ def compare(embeds, sent2, model):
     return model.similarity(embeds, embeddings[0])
 
 
+'''
+Input: tag(NLTK type tag)
+Output: tag in wordnet standardization
+Purpose: converts the tags NLTK creates into the ones that wordnet expects
+'''
 def to_wordnet_pos(tag):
     if tag.startswith("J"):
         return wordnet.ADJ
@@ -71,6 +86,11 @@ def to_wordnet_pos(tag):
     return None
 
 
+'''
+Input: lemma(the lemma), wn_pos(word net tag)
+Output: corrected wordnet tag
+Purpose: Fixes occasional incorrect tags
+'''
 def fix_pos(lemma, wn_pos):
     """
     The POS tagger guesses badly on rare words.
@@ -83,7 +103,11 @@ def fix_pos(lemma, wn_pos):
             return other
     return wn_pos
 
-
+'''
+Input: name(str) the inputted word/phrase
+Output: the zipf score of the word/phrase
+Purpose: calculates the average zipf score of the phrase for picking the best synonym
+'''
 def avg_zipf(name):
     parts = name.split("_")
     total_freq = 2
@@ -92,16 +116,22 @@ def avg_zipf(name):
     return total_freq / len(parts)
 
 
+'''
+Input: tokens, lemma(lemma of a word), wn_pos (word net tag)
+Output: the correct sense of the lemma
+Purpose: Picks the best sense for selecting synonyms
+'''
 def pick_sense(tokens, lemma, wn_pos):
 
     senses = wordnet.synsets(lemma, pos=wn_pos)
     return senses
 
+'''
+Input: name(str) the inputted word/phrase, tag(word net tag)
+Output: the word/phrase inflected to be in the correct tense
+Purpose: Fixes the tense of the word/phrase to match the original
+'''
 def inflect_word(name, tag):
-    """
-    name: name of word
-    tag:  original tag (NNS, VBD, VBG, JJR, ...)
-    """
     parts = name.split("_")
     # Verbs inflect on the first word (give up -> gave up)
     # others on the last (ice cream -> ice creams)
@@ -114,7 +144,11 @@ def inflect_word(name, tag):
         parts[i] = forms[0]
     return parts
 
-
+'''
+Input: Original word/phrase, the new word/phrase
+Output: Word/phrase adjusted for the original case
+Purpose: Fixes the case for the new words 
+'''
 def match_case(original, words):
     words = words.copy()
     if len(original) > 1 and original.isupper():
@@ -123,6 +157,11 @@ def match_case(original, words):
         words[0] = words[0].capitalize()
     return words
 
+'''
+Input: sense(the original sense of the word), wn_Pos(the original wordnet tag)
+Output: found(dictionary mapping word possiblites to their zipf score)   
+Purpose: Finds the best options for replacing the given word
+'''
 def candidate_words(sense, wn_pos):
 
     found = {}
@@ -135,15 +174,21 @@ def candidate_words(sense, wn_pos):
         for related in synlist:
             for lem in related.lemmas():
                 name = lem.name()
-               # print(name)
+
                 if name != name.lower():
-                    continue  # skip proper names
+                    # skip proper names
+                    continue 
                
               
                 found[name] = avg_zipf(name)
-                #print(name, found[name])
+
     return found
 
+'''
+Input: sentence(inputted sentence to simplify), important_words(Medical terminology that should not be changed)
+Output: a new simplifed sentence   
+Purpose: simplifies the non-medical words in a sentence
+'''
 def simplify_total_sentence(sentence, imporant_words):
     tokens = nltk.word_tokenize(sentence)
     tagged = nltk.pos_tag(tokens)

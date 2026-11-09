@@ -5,7 +5,11 @@ from GetMedicalText import get_medical_phrases
 import med_synonyms
 nlp = spacy.load("en_core_web_sm")
 
-
+'''
+Input: text(inputted text to simplify), important_words(Medical terminology that should not be changed)
+Output: a new simplifed sentence   
+Purpose: removes all non-imporatant adjectives and many non-important adverbs
+'''
 def only_whats_needed(text, imporant_words):
   doc = nlp(text)
 
@@ -41,7 +45,12 @@ def only_whats_needed(text, imporant_words):
   return result.strip().capitalize()
 
 
-
+'''
+Input: text(inputted text to simplify), important_words(Medical terminology that should not be changed)
+Output: a new simplifed sentence   
+Purpose: simplfies a the non-medical aspects of a sentence through adj, adv and double negative removal as well as
+replacing non-medical words in text
+'''
 def simplify(text, importantWords):
   
 
@@ -53,6 +62,11 @@ def simplify(text, importantWords):
   print(f"Simplified: {final_result}")
   return final_result
 
+'''
+Input: text(inputted text to simplify)
+Output: a new simplifed sentence   
+Purpose: fully simplfies a sentence both medical terminology and otherwise
+'''
 def setup_and_med_simplify(text):
   print(f"Original: {text}")
   importantWords = set(["lazy"])
