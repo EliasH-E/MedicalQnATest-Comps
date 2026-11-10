@@ -1,15 +1,22 @@
-read_file = open("encodings-standardized.txt", "r")
-counter = 0
-file_num = 1
-print(len(read_file.readlines()))
-read_file = open("encodings-standardized.txt", "r")
-write_file = open("encodings-standardized-1.txt", "a")
-for line in read_file:
-    print(counter / 8500)
-    counter += 1
+""" Splits a file that's too big to push onto github into multiple files
+"""
 
-    write_file.write(line)
-    if counter >= 8500:
-        counter = 0
-        file_num += 1
-        write_file = open("encodings-standardized-" + str(file_num) + ".txt", "a")
+def splitBigFile(input_file):
+    """ Input: input file name (string)
+        Output: none
+    """
+    read_file = open(input_file, "r")
+    counter = 0
+    file_num = 1
+
+    read_file = open(input_file, "r")
+    write_file = open(input_file + "-1.txt", "a")
+    for line in read_file:
+        counter += 1
+
+        write_file.write(line)
+        if counter >= 8500: # 8500 is an arbitrary value
+                            # I'm using it because I know 8500 lines of medquad is below the github size limit 
+            counter = 0
+            file_num += 1
+            write_file = open(input_file + "-" + str(file_num) + ".txt", "a")

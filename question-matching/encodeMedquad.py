@@ -1,25 +1,29 @@
 from sentence_transformers import SentenceTransformer
-sentences = ["Cat scratch injury", "Cat scratch disease", "Bartonellosis"]
+""" Creates a file where each line is a SentenceTransformer encoding of a respective line from the input file
+"""
 
-model = SentenceTransformer('FremyCompany/BioLORD-2023')
-embeddings = model.encode(sentences)
-print(embeddings)
 
-write_file = open("encodings-standardized.txt", "a")
-write_file.write("Question, Encoding\n")
+def encodeMedquad(input_file, output_file, model):
+    """ Usage:
+            encodeMedquad("medquad-standardized.txt", "encodings-standardized.txt", "FremyCompany/BioLORD-2023")
+    """
+    model = SentenceTransformer(model)
 
-read_file = open("medquad-standardized.txt", "r")
-counter = 0
-print(len(read_file.readlines()))
+    read_file = open(input_file, "r")
+    read_file_size = len(read_file.readlines())
 
-read_file = open("medquad-standardized.txt", "r")
-for line in read_file:
-    print(counter / 47442)
-    counter += 1
-    line = line.split(",")[0]
-    if line != "Question":
-        embedding = model.encode(line)
-        write_file.write(line)
-        write_file.write(",")
-        write_file.write(str(embedding).replace("\n",""))
-        write_file.write("\n")
+    read_file = open(input_file, "r")
+    write_file = open(output_file, "a")
+    write_file.write("Question, Encoding\n")
+    
+    counter = 0.0
+    for line in read_file:
+        print("Current progress: ", counter / read_file_size)
+        counter += 1
+        line = line.split(",")[0]
+        if line != "Question":
+            embedding = model.encode(line)
+            write_file.write(line)
+            write_file.write(",")
+            write_file.write(str(embedding).replace("\n",""))
+            write_file.write("\n")
