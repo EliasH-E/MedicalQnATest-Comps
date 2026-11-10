@@ -1,14 +1,15 @@
 from SentenceStandardize import standardize
-from medquadComparer import get_closest_q_a
 from medquadComparer import get_closest_answer, get_closest_question
 
-user_question = "my eyes are dry. help"
+""" Uses medquadComparer to semantically determine the closest question in MedQUaD 
+    to a standardized (SentenceStandardizer) version of the input string, 
+    then returns MedQUaD's answer to that question
+"""
 
 def match_question(user_question):
+    """ Input: user question (string)
+        Output: answer (string)
+    """
     standardized_user_question = standardize(user_question)
-    print(standardized_user_question)
-
     closest_answer = get_closest_answer(standardized_user_question)
-    print(get_closest_question(standardized_user_question)) #check the matched question
     return closest_answer
-print(match_question(user_question))

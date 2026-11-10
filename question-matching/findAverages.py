@@ -1,39 +1,46 @@
+""" Finds and returns the averages and standard deviations for each line in a file
+    Used initially for finding similarity data
+"""
 
 
-
-def findSimilarityData(correct_similarities_file, incorrect_similarities_file):
-    """ Usage:
-            similarity_data = findAverages("correct-similarities.txt", "incorrect-similarities.txt")
+def findAverage(input_file_name):
+    """ Inputs: name of file whose lines are integers or floats 
+        Outputs: average (float)
+        Usage:
+            average = findAverage("correct-input_file.txt")
     """
-    correct_similarities = open(correct_similarities_file, "r")
-    incorrect_similarities = open(incorrect_similarities_file, "r")
+    input_file = open(input_file_name, "r")
+    
 
-    total_correct_lines = 0
-    correct_similarities_sum = 0
-    for line in correct_similarities:
-        total_correct_lines += 1
-        correct_similarities_sum += float(line)
+    total_lines = 0
+    input_file_sum = 0
+    for line in input_file:
+        total_lines += 1
+        input_file_sum += float(line)
 
-    total_incorrect_lines = 0
-    incorrect_similarities_sum = 0
-    for line in incorrect_similarities:
-        total_incorrect_lines += 1
-        incorrect_similarities_sum += float(line)
+    input_file = open(input_file_file, "r")
 
-    correct_similarities = open(correct_similarities_file, "r")
-    incorrect_similarities = open(incorrect_similarities_file, "r")
+    average = input_file_sum/total_lines
 
-    correct_average = correct_similarities_sum/total_correct_lines
-    correct_square_sum = 0
-    for line in correct_similarities:
-        correct_square_sum += (float(line)-correct_average)**2
+    return average
 
-    incorrect_average = incorrect_similarities_sum/total_incorrect_lines
-    incorrect_square_sum = 0
-    for line in incorrect_similarities:
-        incorrect_square_sum += (float(line)-incorrect_average)**2
 
-    correct_stddev = (correct_square_sum/(total_correct_lines-1)) ** .5
-    incorrect_stddev = (incorrect_square_sum/(total_incorrect_lines-1)) ** .5
+def findStandardDeviation(input_file_name):
+    """ Inputs: name of file whose lines are integers or floats 
+        Outputs: standard deviation (float)
+        Usage:
+            similarity_data = findStandardDeviation("correct-input_file.txt")
+    """
+    
+    average = findAverage(input_file_name)
 
-    return {"correct_average": correct_average, "incorrect_average": incorrect_average, "correct_stddev": correct_stddev, "incorrect_stddev": incorrect_stddev}
+    input_file = open(input_file_name, "r")
+
+    square_sum = 0
+    for line in input_file:
+        square_sum += (float(line)-average)**2
+
+
+    stddev = (square_sum/(total_lines-1)) ** .5
+
+    return stddev
