@@ -9,7 +9,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.stem import PorterStemmer
 import wordfreq
 import copy
-
+import spacy
 from sentence_transformers import SentenceTransformer
 
 
@@ -48,6 +48,8 @@ def compare(embeds, sent2, model):
     return model.similarity(embeds, embeddings[0])
 
 def remove_double_negative(sentence):
+    sentence = sentence.lower()
+    # If double negatives are adjacenet
     pairs = {"not abnormal": "normal",
     "not uncommon": "common",
     "not incorrect": "correct",
@@ -75,8 +77,27 @@ def remove_double_negative(sentence):
     "n't unstable": " stable",
     "n't unsafe": " safe",}
     for negative, simplified in pairs.items():
-        sentence.replace(negative, simplified)
-    return sentence
+        sentence = sentence.replace(negative, simplified)
+    #if not adjacent
+    nlp = spacy.load("en_core_web_sm")
+    tokens = nlp(sentence)
+    for token in reversed(list(tokens)):
+        if token.text == "not" or token.text == "n't":
+            head = token.head
+            key = token.text + " " + head.text
+            for child in head.children:
+                key = "not " + child.text
+
+                if key in pairs:
+                    print("Double negative detected:", key)
+            
+                    start = child.idx
+                    end = child.idx + len(child.text)
+                    sentence = sentence[:start] + pairs[key].strip() + sentence[end:]
+                    start = token.idx
+                    end = start + len(token.text)
+                    sentence = sentence[:start] + sentence[end:]
+    return " ".join(sentence.split())
 
 def simplify_total_sentence(sentence, imporant_words):
     #print(sentence)
