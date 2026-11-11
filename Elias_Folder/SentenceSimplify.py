@@ -89,7 +89,6 @@ def remove_double_negative(sentence):
                 key = "not " + child.text
 
                 if key in pairs:
-                    print("Double negative detected:", key)
             
                     start = child.idx
                     end = child.idx + len(child.text)
@@ -101,7 +100,6 @@ def remove_double_negative(sentence):
 
 def simplify_total_sentence(sentence, imporant_words):
     #print(sentence)
-   
     tokens = nltk.word_tokenize(sentence)
     tagged = nltk.pos_tag(tokens)
     
