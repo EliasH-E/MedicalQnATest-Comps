@@ -1,7 +1,9 @@
 from SentenceStandardize import standardize
 from medquadComparer import get_closest_answer, get_closest_question
 
-""" Uses medquadComparer to semantically determine the closest question in MedQUaD 
+""" !!MAIN FILE FOR QUESTION MATCHING!!
+
+    Uses medquadComparer to semantically determine the closest question in MedQUaD 
     to a standardized (SentenceStandardizer) version of the input string, 
     then returns MedQUaD's answer to that question
 """
