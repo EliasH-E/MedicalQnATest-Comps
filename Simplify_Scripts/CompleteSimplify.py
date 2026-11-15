@@ -14,11 +14,11 @@ def simplify(text, importantWords):
   
 
   first_result = SentenceCondense.only_whats_needed(text,importantWords)
-  print(f"Simplified: {first_result}")
+  #print(f"Simplified: {first_result}")
   second_result = SentenceSynonymReplacer.remove_double_negative(first_result)
-  print(f"Doouble Negative Remover: {second_result}")
+  #print(f"Doouble Negative Remover: {second_result}")
   final_result = SentenceSynonymReplacer.simplify_total_sentence(second_result,importantWords)
-  print(f"Simplified: {final_result}")
+  #print(f"Simplified: {final_result}")
   return final_result
 
 '''
@@ -27,14 +27,14 @@ Output: a new simplifed sentence
 Purpose: fully simplfies a sentence both medical terminology and otherwise
 '''
 def complete_simplification(text: str):
-    print(f"Original: {text}")
+    #print(f"Original: {text}")
     med_result = med_synonyms.med_simple(text)
     text = med_result[0]
-    print("Medical Simplifed:",text)
-    print()
+    #print("Medical Simplifed:",text)
+    #print()
     importantWords = med_result[1]
-    print("Important Words:", importantWords)
-    print()
+    #print("Important Words:", importantWords)
+    #print()
     return simplify(text, importantWords)
 
 

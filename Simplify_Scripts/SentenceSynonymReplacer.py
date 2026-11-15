@@ -3,20 +3,25 @@ from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 from nltk.wsd import lesk
 from nltk.corpus import stopwords
+from nltk.tokenize import SyllableTokenizer
 import wordfreq
 import lemminflect
 from lemminflect import getInflection
 import spacy
 
 from sentence_transformers import SentenceTransformer
+
 # nltk.download('punkt_tab')
 # nltk.download('averaged_perceptron_tagger_eng')
 # nltk.download('wordnet')
 # nltk.download('omw-1.4')
 
 lemmatizer = WordNetLemmatizer()
+syltokenizer = SyllableTokenizer()
 stop_words = set(stopwords.words('english'))
 
+
+FOCUS_ZIPF = True
 INCLUDE_HYPONYMS = True  
 MAX_SENSE_RANK = 15      # candidate must use this sense as one of ITS top N senses
 
@@ -115,6 +120,20 @@ def avg_zipf(name):
         total_freq += wordfreq.zipf_frequency(i, "en") - 2
     return total_freq / len(parts)
 
+def normal_avg_zipf(sentence):
+    parts = sentence.split(" ")
+    total_freq = 0
+    for i in parts:
+        total_freq += wordfreq.zipf_frequency(i, "en")
+    return total_freq / len(parts)
+
+def avg_syl_count(name):
+    parts = name.split("_")
+    total_freq = -2
+    for i in parts:
+        syllabels = syltokenizer.tokenize(i)
+        total_freq += -len(syllabels) + 2
+    return total_freq / len(parts)
 
 '''
 Input: tokens, lemma(lemma of a word), wn_pos (word net tag)
@@ -179,8 +198,10 @@ def candidate_words(sense, wn_pos):
                     # skip proper names
                     continue 
                
-              
-                found[name] = avg_zipf(name)
+                if(FOCUS_ZIPF):
+                    found[name] = avg_zipf(name)
+                else:
+                    found[name] = avg_syl_count(name)
 
     return found
 
@@ -216,8 +237,11 @@ def simplify_total_sentence(sentence, imporant_words):
             new_words.append(word)
             id += 1
             continue
-
-        my_syns = {lemma: avg_zipf(lemma)}
+        my_syns = {}
+        if(FOCUS_ZIPF):
+            my_syns = {lemma: avg_zipf(lemma)}
+        else:
+            my_syns = {lemma: avg_syl_count(lemma)}
         my_syns.update(candidate_words(sense, wn_pos))
 
 
@@ -234,7 +258,7 @@ def simplify_total_sentence(sentence, imporant_words):
             current_copy[id] = " ".join(word_to_proper_case[i])               
             comp_score = compare(orig_embed," ".join(current_copy), model)
            
-            my_syns[i] = my_syns[i]*comp_score*comp_score*comp_score*comp_score*comp_score*comp_score*comp_score*comp_score
+            my_syns[i] = my_syns[i]*comp_score*comp_score*comp_score*comp_score*comp_score*comp_score#*comp_score*comp_score
        
        
         best_word = max(my_syns, key=my_syns.get)
