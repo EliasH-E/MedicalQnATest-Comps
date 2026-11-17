@@ -1,8 +1,7 @@
 import spacy
-import SentenceSynonymReplacer
-from GetMedicalText import get_medical_phrases
+from . import SentenceSynonymReplacer
 
-import med_synonyms
+from . import med_synonyms
 nlp = spacy.load("en_core_web_sm")
 
 '''

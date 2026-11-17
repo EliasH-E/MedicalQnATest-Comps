@@ -19,7 +19,7 @@ special_stop_words = set(["patient"])
 
 def load_chv():
     chv = pd.read_csv(
-        "../CHV_words/CHV_concepts_terms_flatfile_20110204.tsv",
+        "CHV_words/CHV_concepts_terms_flatfile_20110204.tsv",
         sep="\t"
     )
 

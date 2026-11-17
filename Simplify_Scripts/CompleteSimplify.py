@@ -1,6 +1,6 @@
-import med_synonyms
-import SentenceCondense
-import SentenceSynonymReplacer
+from . import med_synonyms
+from . import SentenceCondense
+from . import SentenceSynonymReplacer
 
 
 
