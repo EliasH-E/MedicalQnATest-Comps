@@ -4,7 +4,7 @@ total_count = 0
 
 
 common_total = 0
-with open("data_flesch.txt", "r", encoding="utf-8") as file:
+with open("CancerData.txt", "r", encoding="utf-8") as file:
     for line in file:
         clean_line = line.strip()  # Removes whitespace and '\n'
         if clean_line:
