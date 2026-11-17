@@ -8,10 +8,10 @@ from medquadComparer import get_closest_answer, get_closest_question
     then returns MedQUaD's answer to that question
 """
 
-def match_question(user_question):
+def match_question(user_question, qa_file):
     """ Input: user question (string)
         Output: answer (string)
     """
     standardized_user_question = standardize(user_question)
-    closest_answer = get_closest_answer(standardized_user_question)
+    closest_answer = get_closest_answer(standardized_user_question, qa_file)
     return closest_answer
