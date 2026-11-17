@@ -17,28 +17,29 @@ debug = True
 import language_tool_python
 
 #import our functions
-from SentenceStandardize import sentenceStandardizer
-from question_matching import matchQuestion
+import SentenceStandardize
+#from question_matching import *
 from Emma_folder import evaluation
 from Simplify_Scripts import CompleteSimplify
+import spacy
 
 user_input = input("Please enter your question: ")
 
 # Correct any user-input grammatical errors
 # This step may take a while, need to test
-tool = language_tool_python.LanguageTool('en-US')
-matches = tool.check(user_input)
-user_input = language_tool_python.utils.correct(user_input, matches)
+#tool = language_tool_python.LanguageTool('en-US')
+#matches = tool.check(user_input)
+#user_input = language_tool_python.utils.correct(user_input, matches)
 if debug:
     print(f"Corrected user input: {user_input}")
 
 # Standardize User input
-user_input = sentenceStandardizer(user_input)
+user_input = SentenceStandardize.standardize(user_input)
 if debug:
     print(f"Standardized user input: {user_input}")
 
 # Match user input to a question/answer
-original_answer = matchQuestion.match_question(user_input)
+original_answer = "hello"
 #closest_question = question_matching["question"]
 #original_answer = question_matching["answer"]
 #if debug:
@@ -46,10 +47,10 @@ original_answer = matchQuestion.match_question(user_input)
  #   print(f"Closest answer: {original_answer}")
 
 # Standardize answer
-answer = sentenceStandardizer(original_answer)
+answer = SentenceStandardize.standardize(original_answer)
 
 #Simplify answer
-answer = SentenceSimplify.CompleteSimplify(answer)
+answer = CompleteSimplify.complete_simplification(answer)
 if debug:
     print(f"Standardized+Simplified Answer: {answer}")
 
