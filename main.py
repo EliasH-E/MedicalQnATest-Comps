@@ -2,14 +2,25 @@
 # Written by Klaus Beasley, Elias Hillman-Emelianoff, 
 #            Alexei Mendez, Daya Tucker, Emma Yao, Nathan Zhang 
 
+# If running for the first time: make sure you have these packages
+# language_tool_python: pip install language_tool_python
+# nltk: pip install nltk
+#     Then in python, run:
+#       >>> import nltk
+#       >>> nltk.download('punkt_tab')
+# pandas: pip install pandas
+
+# To run, enter into terminal: python3 main.py
+
 debug = True
 # import packages
 import language_tool_python
 
 #import our functions
 from SentenceStandardize import sentenceStandardizer
-from ..question-matching import get_closest_q_a
-
+from question_matching import matchQuestion
+from Emma_folder import evaluation
+from Simplify_Scripts import CompleteSimplify
 
 user_input = input("Please enter your question: ")
 
@@ -27,21 +38,30 @@ if debug:
     print(f"Standardized user input: {user_input}")
 
 # Match user input to a question/answer
-question_matching = get_closest_q_a(user_input)
-closest_question = question_matching["question"]
-answer = question_matching["answer"]
-if debug:
-    print(f"Closest question: {closest_question}")
-    print(f"Closest question: {answer}")
+original_answer = matchQuestion.match_question(user_input)
+#closest_question = question_matching["question"]
+#original_answer = question_matching["answer"]
+#if debug:
+##    print(f"Closest question: {closest_question}")
+ #   print(f"Closest answer: {original_answer}")
 
 # Standardize answer
-answer = sentenceStandardizer(answer)
+answer = sentenceStandardizer(original_answer)
 
 #Simplify answer
+answer = SentenceSimplify.CompleteSimplify(answer)
+if debug:
+    print(f"Standardized+Simplified Answer: {answer}")
 
 # Check coherence
+# needs to be implemented
 
 # Evaluate Difficulty
+evaluation = evaluation.evaluate_readability(original_answer, answer)
+if debug:
+    print(f"Flesch-Kincaid before: {evaluation[0]}")
+    print(f"Flesch-Kincaid after: {evaluation[1]}")
+    
 # simplify further if needed
 
 print(answer)
