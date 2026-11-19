@@ -27,3 +27,5 @@ def encodeMedquad(input_file, output_file, model):
             write_file.write(",")
             write_file.write(str(embedding).replace("\n",""))
             write_file.write("\n")
+
+encodeMedquad("clean-consolidated.txt", "question-encodings-map.txt", "FremyCompany/BioLORD-2023")

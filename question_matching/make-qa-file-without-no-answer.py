@@ -13,4 +13,5 @@ def makeQAFileWithoutNoAnswer(input_file, output_file):
             continue
         else:
             write_file.write(line)
-        
+    
+makeQAFileWithoutNoAnswer("consolidated.txt", "clean-consolidated.txt")

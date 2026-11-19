@@ -20,3 +20,5 @@ def splitBigFile(input_file):
             counter = 0
             file_num += 1
             write_file = open(input_file + "-" + str(file_num) + ".txt", "a")
+
+splitBigFile("YOUR FILE HERE")
