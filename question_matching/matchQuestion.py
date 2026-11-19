@@ -12,8 +12,9 @@ def match_question(user_question, questions_to_answers_file, questions_to_encodi
     """ Input: user question (string)
                file of questions and their SentenceTransformer encodings separated by a comma 
                     in the format "[question],[encoding of question]\n"
+               file of questions and their answers
         Output: answer (string)
-        Example: print(match_question("What is blood loss?", "encodings-standardized-1.txt"))
+        Example: print(match_question("What is blood loss?", "medquad-standardized.txt", "encodings-standardized-1.txt"))
     """
     standardized_user_question = standardize(user_question)
     closest_answer = get_closest_answer(standardized_user_question, questions_to_answers_file, questions_to_encodings_file)

@@ -4,8 +4,9 @@ import numpy as np
 """ Set of functions that look through a q/a file for the closest match to an input string, 
     then return some quality of that match
 
-    The input file must be in form "[question],[answer]\n..."
-    The user question is matched to some [question]
+    Requires two answers files:
+        The first must be in form "[question],[answer]\n..."
+        The second must be in form "[question],[sentencetransformer encoding of question]\n..."
 """
 
 model = SentenceTransformer('FremyCompany/BioLORD-2023')
@@ -20,7 +21,7 @@ def get_closest_answer(user_question, questions_to_answers_file, questions_to_en
     return get_closest_q_a(user_question, questions_to_answers_file, questions_to_encodings_file)["answer"]
 
 def get_closest_q_a(user_question, questions_to_answers_file, questions_to_encodings_file):
-    """ Input: user question (string), name of formatted medquad file (string)
+    """ Input: user question (string), name of formatted medquad file (string), name of formatted encodings file (string)
         Output: dictionary holding the question of maximum similarity (string) to the user question,
                                    the question's answer (string),
                                    and the similarity (from sentencetransformer, float) between the questions
