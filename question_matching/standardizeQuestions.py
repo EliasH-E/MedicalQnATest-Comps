@@ -1,4 +1,4 @@
-from SentenceStandardize import standardize
+from .SentenceStandardize import standardize
 
 """ Uses SentenceStandardize to standardize every line in a file's medical terms and write the result to another file.
     REQUIRES a file of format "[question],[answer]\n" and only standardizes the [question]s 

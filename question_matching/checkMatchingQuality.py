@@ -1,8 +1,8 @@
-from medquadComparer import get_closest_question
-from medquadComparer import get_closest_q_a
-from SentenceSimplify import simplify
-from med_synonyms import simplify_term
-from med_synonyms import load_chv
+from .medquadComparer import get_closest_question
+from .medquadComparer import get_closest_q_a
+from .SentenceSimplify import simplify
+from .med_synonyms import simplify_term
+from .med_synonyms import load_chv
 
 """ File that uses medquadComparer, SentenceSimplify, and med_synonyms 
     to match a simplified version of each input question back to its original version. """

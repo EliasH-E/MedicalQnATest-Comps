@@ -1,5 +1,5 @@
-from SentenceStandardize import standardize
-from medquadComparer import get_closest_answer, get_closest_question
+from .SentenceStandardize import standardize
+from .medquadComparer import get_closest_answer, get_closest_question
 
 """ !!MAIN FILE FOR QUESTION MATCHING!!
 
@@ -20,4 +20,4 @@ def match_question(user_question, questions_to_answers_file, questions_to_encodi
     closest_answer = get_closest_answer(standardized_user_question, questions_to_answers_file, questions_to_encodings_file)
     return closest_answer
 
-print(match_question("What is a blood clot?", "medquad-standardized.txt", "encodings-standardized-1.txt"))
+#print(match_question("What is a blood clot?", "medquad-standardized.txt", "encodings-standardized-1.txt"))
